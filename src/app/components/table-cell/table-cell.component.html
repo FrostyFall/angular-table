@@ -1,0 +1,8 @@
+<td
+  class="table__td"
+  [class.table__td--search-highlight]="isMatch"
+  [class.table__td--select-highlight]="isSelected"
+  [class.table__td--cross-highlight]="isCollision()"
+>
+  <ng-content></ng-content>
+</td>

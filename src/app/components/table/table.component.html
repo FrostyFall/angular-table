@@ -1,0 +1,44 @@
+<form [formGroup]="searchForm" class="form">
+  <input
+    type="text"
+    class="search-field"
+    #searchField
+    formControlName="searchField"
+  />
+</form>
+<table class="table">
+  <thead class="table__thead">
+    <tr>
+      <th class="table__th">ID</th>
+      <th class="table__th">First Name</th>
+      <th class="table__th">Last Name</th>
+      <th class="table__th">Age</th>
+    </tr>
+  </thead>
+  <tbody class="table__tbody">
+    <tr class="tbody__empty-row" *ngIf="data.length === 0; else dataRows">
+      No data
+    </tr>
+
+    <ng-template #dataRows>
+      <tr class="tbody__entry-row" *ngFor="let entry of data; index as i">
+        <app-table-cell [isMatch]="isMatch(entry.id)">{{
+          entry.id
+        }}</app-table-cell>
+        <app-table-cell [isMatch]="isMatch(entry.firstName)">{{
+          entry.firstName | TruncateString : stringMaxLength
+        }}</app-table-cell>
+        <app-table-cell [isMatch]="isMatch(entry.lastName)">{{
+          entry.lastName | TruncateString : stringMaxLength
+        }}</app-table-cell>
+        <app-table-cell [isMatch]="isMatch(entry.age)">{{
+          entry.age
+        }}</app-table-cell>
+      </tr>
+    </ng-template>
+  </tbody>
+</table>
+
+<div class="spinner-container" *ngIf="isDataLoading">
+  <mat-spinner></mat-spinner>
+</div>
