@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { TableEntry } from '../interfaces/tableEntry.interface';
-import { data } from '../entities/data';
+import data from '../entities/data';
 
 @Injectable({
   providedIn: 'root',

@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableService } from 'src/app/services/table.service';
 import { TableEntry } from 'src/app/interfaces/tableEntry.interface';
@@ -8,6 +14,7 @@ import { delay, distinctUntilChanged, tap } from 'rxjs';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TableCellComponent } from '../table-cell/table-cell.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import timer from 'src/app/utils/timer';
 
 @Component({
   selector: 'app-table',
@@ -27,6 +34,7 @@ export class TableComponent implements OnInit {
   stringMaxLength: number = 0;
   searchString: string = '';
   isDataLoading: boolean = false;
+  animationReset: boolean = false;
 
   breakpoint$ = this.breakpointObserver
     .observe([Breakpoints.XSmall])
@@ -34,6 +42,11 @@ export class TableComponent implements OnInit {
   searchForm = this.fb.group({
     searchField: ['', Validators.required],
   });
+
+  @ViewChildren('idCell') idCells!: QueryList<TableCellComponent>;
+  @ViewChildren('firstNameCell') fNameCells!: QueryList<TableCellComponent>;
+  @ViewChildren('lastNameCell') lNameCells!: QueryList<TableCellComponent>;
+  @ViewChildren('ageCell') ageCells!: QueryList<TableCellComponent>;
 
   constructor(
     private tableService: TableService,
@@ -43,6 +56,44 @@ export class TableComponent implements OnInit {
 
   ngOnInit(): void {
     this.initSubcriptions();
+  }
+
+  async onMouseenter(lists: QueryList<TableCellComponent>[]) {
+    console.log('TRIG MOUSEOVER');
+
+    if (lists.length === 0) {
+      return;
+    }
+
+    const listLength = lists[0].length;
+
+    for (let i = 0; i < listLength; i++) {
+      for (let j = 0; j < listLength; j++) {
+        if (this.animationReset) {
+          this.animationReset = false;
+          return;
+        }
+        // TODO: Change order of conditions to change animation direction
+        if (j === i) {
+          lists.forEach((list) => list.get(j)?.liftDown());
+        } else if (j < i) {
+          lists.forEach((list) => list.get(j)?.liftUp(listLength - i + 1 - 2));
+        } else if (j > i) {
+          lists.forEach((list) => list.get(j)?.liftUp(-1 * (i + 1)));
+        }
+        await timer(250);
+      }
+      await timer(500);
+    }
+  }
+
+  onMouseleave(lists: QueryList<TableCellComponent>[]) {
+    console.log('TRIG MOUSEOUT');
+
+    // this.animationReset = true;
+    // lists.forEach((list: QueryList<TableCellComponent>) => {
+    //   list.forEach((cell: TableCellComponent) => cell.resetState());
+    // });
   }
 
   public isMatch(fieldValue: string | number): boolean {

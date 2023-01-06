@@ -9,10 +9,34 @@
 <table class="table">
   <thead class="table__thead">
     <tr>
-      <th class="table__th">ID</th>
-      <th class="table__th">First Name</th>
-      <th class="table__th">Last Name</th>
-      <th class="table__th">Age</th>
+      <th
+        class="table__th"
+        (mouseenter)="onMouseenter([fNameCells])"
+        (mouseleave)="onMouseleave([fNameCells])"
+      >
+        ID
+      </th>
+      <th
+        class="table__th"
+        (mouseenter)="onMouseenter([idCells, lNameCells])"
+        (mouseleave)="onMouseleave([idCells, lNameCells])"
+      >
+        First Name
+      </th>
+      <th
+        class="table__th"
+        (mouseenter)="onMouseenter([fNameCells, ageCells])"
+        (mouseleave)="onMouseleave([fNameCells, ageCells])"
+      >
+        Last Name
+      </th>
+      <th
+        class="table__th"
+        (mouseenter)="onMouseenter([lNameCells])"
+        (mouseleave)="onMouseleave([lNameCells])"
+      >
+        Age
+      </th>
     </tr>
   </thead>
   <tbody class="table__tbody">
@@ -21,19 +45,39 @@
     </tr>
 
     <ng-template #dataRows>
-      <tr class="tbody__entry-row" *ngFor="let entry of data; index as i">
-        <app-table-cell [isMatch]="isMatch(entry.id)">{{
-          entry.id
-        }}</app-table-cell>
-        <app-table-cell [isMatch]="isMatch(entry.firstName)">{{
-          entry.firstName | TruncateString : stringMaxLength
-        }}</app-table-cell>
-        <app-table-cell [isMatch]="isMatch(entry.lastName)">{{
-          entry.lastName | TruncateString : stringMaxLength
-        }}</app-table-cell>
-        <app-table-cell [isMatch]="isMatch(entry.age)">{{
-          entry.age
-        }}</app-table-cell>
+      <tr class="tbody__entry-row" *ngFor="let entry of data; index as i" #row>
+        <app-table-cell
+          #idCell
+          [isMatch]="isMatch(entry.id)"
+          [rowIndex]="i"
+          [totalRows]="data.length"
+          >{{ entry.id }}</app-table-cell
+        >
+        <app-table-cell
+          #firstNameCell
+          [isMatch]="isMatch(entry.firstName)"
+          [rowIndex]="i"
+          [totalRows]="data.length"
+          >{{
+            entry.firstName | TruncateString : stringMaxLength
+          }}</app-table-cell
+        >
+        <app-table-cell
+          #lastNameCell
+          [isMatch]="isMatch(entry.lastName)"
+          [rowIndex]="i"
+          [totalRows]="data.length"
+          >{{
+            entry.lastName | TruncateString : stringMaxLength
+          }}</app-table-cell
+        >
+        <app-table-cell
+          #ageCell
+          [isMatch]="isMatch(entry.age)"
+          [rowIndex]="i"
+          [totalRows]="data.length"
+          >{{ entry.age }}</app-table-cell
+        >
       </tr>
     </ng-template>
   </tbody>

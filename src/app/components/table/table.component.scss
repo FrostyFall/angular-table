@@ -1,9 +1,4 @@
-$table-border: rgb(73, 73, 73);
-$cell-color-primary: #fff;
-$cell-color-secondary: rgb(197, 197, 197);
-$background-primary: rgb(43, 42, 48);
-$table-selected-highlight: rgb(255, 0, 55);
-$table-search-highlight: rgb(119, 0, 255);
+@use "../../utils/vars";
 
 :host {
   max-width: 100%;
@@ -42,23 +37,23 @@ $table-search-highlight: rgb(119, 0, 255);
   max-width: 90%;
   width: 600px;
   margin: 0 auto;
-  color: $cell-color-primary;
+  color: vars.$cell-color-primary;
 
   tr {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px solid $table-border;
     font-size: 1rem;
+    height: 50px;
   }
 }
 
 .table__thead {
   position: sticky;
   top: 40px;
-  background-color: $background-primary;
+  background-color: vars.$background-primary;
 
   tr {
-    border-top: 1px solid $table-border;
+    border-bottom: 1px solid vars.$table-border;
   }
 }
 
@@ -73,7 +68,7 @@ $table-search-highlight: rgb(119, 0, 255);
 }
 
 .table__th {
-  color: $cell-color-secondary;
+  color: vars.$cell-color-secondary;
   font-weight: normal;
 }
 
@@ -99,6 +94,7 @@ $table-search-highlight: rgb(119, 0, 255);
 }
 
 app-table-cell {
+  height: 50px;
   &:nth-of-type(1) {
     min-width: 15%;
   }

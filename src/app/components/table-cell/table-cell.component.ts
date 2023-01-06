@@ -1,10 +1,15 @@
 import {
   Component,
-  EventEmitter,
+  ElementRef,
+  HostBinding,
   HostListener,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  Renderer2,
+  SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TableService } from 'src/app/services/table.service';
@@ -15,13 +20,33 @@ import { TableService } from 'src/app/services/table.service';
   styleUrls: ['./table-cell.component.scss'],
   standalone: true,
 })
-export class TableCellComponent implements OnInit, OnDestroy {
+export class TableCellComponent implements OnInit, OnDestroy, OnChanges {
   @Input('isMatch') isMatch: boolean = false;
+  @Input('animSkipRows') skipRows: string = '';
+  @Input('rowIndex') rowIndex: number = 0;
+  @Input('totalRows') totalRows: number = 0;
   isSelected: boolean = false;
 
   destroy$ = new Subject<void>();
 
-  constructor(private tableService: TableService) {}
+  @ViewChild('cell', { static: true }) cell!: ElementRef<HTMLElement>;
+
+  constructor(
+    private tableService: TableService,
+    private renderer: Renderer2
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isMatch'].firstChange) {
+      this.renderer.setAttribute(
+        this.cell.nativeElement,
+        'style',
+        `
+        --lift: 0;
+        `
+      );
+    }
+  }
 
   ngOnInit(): void {
     this.tableService.selectedCells.subscribe((value) => {
@@ -32,6 +57,36 @@ export class TableCellComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  public liftDown() {
+    this.renderer.setAttribute(
+      this.cell.nativeElement,
+      'style',
+      `
+      --lift: ${50 * (this.totalRows - this.rowIndex - 1)}px;
+      `
+    );
+  }
+
+  public liftUp(stepsUp: number) {
+    this.renderer.setAttribute(
+      this.cell.nativeElement,
+      'style',
+      `
+      --lift: ${50 * stepsUp}px;
+      `
+    );
+  }
+
+  public resetState() {
+    this.renderer.setAttribute(
+      this.cell.nativeElement,
+      'style',
+      `
+      --lift: 0;
+      `
+    );
   }
 
   @HostListener('click')
@@ -55,9 +110,6 @@ export class TableCellComponent implements OnInit, OnDestroy {
   }
 
   public isCollision(): boolean {
-    if (this.isMatch && this.isSelected) {
-      return true;
-    }
-    return false;
+    return this.isMatch && this.isSelected;
   }
 }

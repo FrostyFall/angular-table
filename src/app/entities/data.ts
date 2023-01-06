@@ -1,14 +1,17 @@
+import { faker } from '@faker-js/faker';
+
 import { TableEntry } from '../interfaces/tableEntry.interface';
 
-export const data: TableEntry[] = [
-  {
-    id: 0,
-    firstName: 'Johndsasddsksandsdajdjdansjadsja',
-    lastName: 'Doe',
-    age: 23,
-  },
-  { id: 1, firstName: 'Jane', lastName: 'Doe', age: 25 },
-  { id: 2, firstName: 'Andrew', lastName: 'Tate', age: 30 },
-  { id: 3, firstName: 'Michael', lastName: 'Bennett', age: 18 },
-  { id: 3, firstName: 'Michael', lastName: 'Bennett', age: 18 },
-];
+const entriesNum = 5;
+const data: TableEntry[] = [];
+
+for (let i = 0; i < entriesNum; i++) {
+  data.push({
+    id: i,
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    age: +faker.random.numeric(2),
+  });
+}
+
+export default data;

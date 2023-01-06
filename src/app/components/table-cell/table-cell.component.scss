@@ -1,13 +1,9 @@
-$table-border: rgb(73, 73, 73);
-$cell-color-primary: #fff;
-$cell-color-secondary: rgb(197, 197, 197);
-$background-primary: rgb(43, 42, 48);
-$table-selected-highlight: rgb(255, 0, 55);
-$table-search-highlight: rgb(119, 0, 255);
+@use "../../utils/vars";
 
 :host {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 
 .table__td {
@@ -15,22 +11,32 @@ $table-search-highlight: rgb(119, 0, 255);
   padding: 1em;
   height: 100%;
   display: block;
-  color: $cell-color-primary;
+  color: vars.$cell-color-primary;
+  background-color: vars.$background-primary;
+  position: relative;
+  z-index: 10;
+  transition: transform 0.3s;
+  transform: translateY(var(--lift));
+  // border-bottom: 1px solid vars.$table-border;
 
   &--search-highlight {
-    background-color: $table-search-highlight;
+    background-color: vars.$table-search-highlight;
   }
 
   &--select-highlight {
-    background-color: $table-selected-highlight;
+    background-color: vars.$table-selected-highlight;
   }
 
   &--cross-highlight {
-    background-color: transparent;
     background: linear-gradient(
-      90deg,
-      $table-search-highlight,
-      $table-selected-highlight
-    ) !important;
+      to bottom left,
+      vars.$table-selected-highlight 50%,
+      vars.$table-search-highlight 50%
+    );
+    // background: linear-gradient(
+    //   90deg,
+    //   vars.$table-search-highlight,
+    //   vars.$table-selected-highlight,
+    // ) !important;
   }
 }
