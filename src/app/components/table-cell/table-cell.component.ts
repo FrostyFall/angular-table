@@ -26,6 +26,8 @@ export class TableCellComponent implements OnInit, OnDestroy, OnChanges {
   @Input('rowIndex') rowIndex: number = 0;
   @Input('totalRows') totalRows: number = 0;
   isSelected: boolean = false;
+  lift: string = '0';
+  animTime: string = '0';
 
   destroy$ = new Subject<void>();
 
@@ -42,7 +44,8 @@ export class TableCellComponent implements OnInit, OnDestroy, OnChanges {
         this.cell.nativeElement,
         'style',
         `
-        --lift: 0;
+        --lift: ${this.lift};
+        --anim-time: ${this.animTime};
         `
       );
     }
@@ -59,24 +62,53 @@ export class TableCellComponent implements OnInit, OnDestroy, OnChanges {
     this.destroy$.complete();
   }
 
+  public setAnimTime(msTime: number) {
+    this.animTime = msTime.toString() + 'ms';
+    this.setStyle();
+
+    // this.renderer.setAttribute(
+    //   this.cell.nativeElement,
+    //   'style',
+    //   `
+    //   --lift: ${this.lift};
+    //   --anim-time: ${this.animTime};
+    //   `
+    // );
+  }
+
+  public rotateAround() {
+    this.renderer.addClass(this.cell.nativeElement, 'table__td--rotate');
+  }
+
+  public resetRotateAround() {
+    this.renderer.removeClass(this.cell.nativeElement, 'table__td--rotate');
+  }
+
   public liftDown() {
-    this.renderer.setAttribute(
-      this.cell.nativeElement,
-      'style',
-      `
-      --lift: ${50 * (this.totalRows - this.rowIndex - 1)}px;
-      `
-    );
+    this.renderer.addClass(this.cell.nativeElement, 'table__td--behind');
+    this.lift = `${50 * (this.totalRows - this.rowIndex - 1)}px`;
+    this.setStyle();
+    // this.renderer
+    // this.renderer.setAttribute(
+    //   this.cell.nativeElement,
+    //   'style',
+    //   `
+    //   --lift: ${50 * (this.totalRows - this.rowIndex - 1)}px;
+    //   `
+    // );
   }
 
   public liftUp(stepsUp: number) {
-    this.renderer.setAttribute(
-      this.cell.nativeElement,
-      'style',
-      `
-      --lift: ${50 * stepsUp}px;
-      `
-    );
+    this.renderer.removeClass(this.cell.nativeElement, 'table__td--behind');
+    this.lift = `${50 * stepsUp}px`;
+    this.setStyle();
+    // this.renderer.setAttribute(
+    //   this.cell.nativeElement,
+    //   'style',
+    //   `
+    //   --lift: ${50 * stepsUp}px;
+    //   `
+    // );
   }
 
   public resetState() {
@@ -85,6 +117,17 @@ export class TableCellComponent implements OnInit, OnDestroy, OnChanges {
       'style',
       `
       --lift: 0;
+      `
+    );
+  }
+
+  private setStyle() {
+    this.renderer.setAttribute(
+      this.cell.nativeElement,
+      'style',
+      `
+      --lift: ${this.lift};
+      --anim-time: ${this.animTime};
       `
     );
   }

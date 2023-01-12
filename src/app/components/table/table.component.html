@@ -11,29 +11,29 @@
     <tr>
       <th
         class="table__th"
-        (mouseenter)="onMouseenter([fNameCells])"
-        (mouseleave)="onMouseleave([fNameCells])"
+        (mouseenter)="onMouseenter({ left: undefined, right: fNameCells })"
+        (mouseleave)="onMouseleave({ left: undefined, right: fNameCells })"
       >
         ID
       </th>
       <th
         class="table__th"
-        (mouseenter)="onMouseenter([idCells, lNameCells])"
-        (mouseleave)="onMouseleave([idCells, lNameCells])"
+        (mouseenter)="onMouseenter({ left: idCells, right: lNameCells })"
+        (mouseleave)="onMouseleave({ left: idCells, right: lNameCells })"
       >
         First Name
       </th>
       <th
         class="table__th"
-        (mouseenter)="onMouseenter([fNameCells, ageCells])"
-        (mouseleave)="onMouseleave([fNameCells, ageCells])"
+        (mouseenter)="onMouseenter({ left: fNameCells, right: ageCells })"
+        (mouseleave)="onMouseleave({ left: fNameCells, right: ageCells })"
       >
         Last Name
       </th>
       <th
         class="table__th"
-        (mouseenter)="onMouseenter([lNameCells])"
-        (mouseleave)="onMouseleave([lNameCells])"
+        (mouseenter)="onMouseenter({ left: lNameCells, right: undefined })"
+        (mouseleave)="onMouseleave({ left: lNameCells, right: undefined })"
       >
         Age
       </th>

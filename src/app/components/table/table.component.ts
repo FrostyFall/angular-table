@@ -58,36 +58,85 @@ export class TableComponent implements OnInit {
     this.initSubcriptions();
   }
 
-  async onMouseenter(lists: QueryList<TableCellComponent>[]) {
-    console.log('TRIG MOUSEOVER');
+  async firstAnimation(
+    list: QueryList<TableCellComponent>,
+    msTime: number = 1000
+  ) {
+    const listLength = list.length;
+    const iterTime = msTime / listLength;
 
-    if (lists.length === 0) {
-      return;
+    for (let i = 0; i < listLength; i++) {
+      list.get(i)?.setAnimTime(300);
     }
-
-    const listLength = lists[0].length;
 
     for (let i = 0; i < listLength; i++) {
       for (let j = 0; j < listLength; j++) {
-        if (this.animationReset) {
-          this.animationReset = false;
-          return;
-        }
         // TODO: Change order of conditions to change animation direction
         if (j === i) {
-          lists.forEach((list) => list.get(j)?.liftDown());
+          list.get(j)?.liftDown();
         } else if (j < i) {
-          lists.forEach((list) => list.get(j)?.liftUp(listLength - i + 1 - 2));
+          list.get(j)?.liftUp(listLength - i + 1 - 2);
         } else if (j > i) {
-          lists.forEach((list) => list.get(j)?.liftUp(-1 * (i + 1)));
+          list.get(j)?.liftUp(-1 * (i + 1));
         }
-        await timer(250);
+        // await timer(iterTime / listLength);
+        // await timer(iterTime);
       }
-      await timer(500);
+      // await timer(msTime / listLength);
+      await timer(250);
     }
   }
 
-  onMouseleave(lists: QueryList<TableCellComponent>[]) {
+  async secondAnimation(
+    list: QueryList<TableCellComponent>,
+    msTime: number = 1000
+  ) {
+    const listLength = list.length;
+    const iterTime = msTime / listLength / 2;
+
+    for (let i = 0; i < listLength; i++) {
+      list.get(i)?.resetRotateAround();
+      list.get(i)?.setAnimTime(iterTime);
+    }
+
+    for (let i = 0; i < listLength; i++) {
+      list.get(i)?.rotateAround();
+
+      await timer(50);
+    }
+
+    await timer(iterTime * 2);
+
+    for (let i = listLength - 1; i >= 0; i--) {
+      list.get(i)?.resetRotateAround();
+
+      await timer(50);
+    }
+  }
+
+  async onMouseenter(lists: {
+    left: QueryList<TableCellComponent> | undefined;
+    right: QueryList<TableCellComponent> | undefined;
+  }) {
+    console.log('TRIG MOUSEOVER');
+
+    if (lists.left === undefined && lists.right === undefined) {
+      return;
+    }
+
+    if (lists.left) {
+      this.firstAnimation(lists.left, 2000);
+    }
+
+    if (lists.right) {
+      this.secondAnimation(lists.right, 2000);
+    }
+  }
+
+  onMouseleave(lists: {
+    left: QueryList<TableCellComponent> | undefined;
+    right: QueryList<TableCellComponent> | undefined;
+  }) {
     console.log('TRIG MOUSEOUT');
 
     // this.animationReset = true;
